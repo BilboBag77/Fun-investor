@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
 bot = Bot(token=os.getenv("BOT_TOKEN"))
-dp = Dispatcher(bot, parse_mode=ParseMode.HTML)
+dp = Dispatcher()
 
 async def main():
     # Register handlers
