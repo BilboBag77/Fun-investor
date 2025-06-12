@@ -12,8 +12,8 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=os.getenv("BOT_TOKEN"), parse_mode=ParseMode.HTML)
-dp = Dispatcher()
+bot = Bot(token=os.getenv("BOT_TOKEN"))
+dp = Dispatcher(bot, parse_mode=ParseMode.HTML)
 
 async def main():
     # Register handlers
@@ -21,7 +21,7 @@ async def main():
     register_handlers(dp)
     
     # Start polling
-    await dp.start_polling(bot)
+    await dp.start_polling()
 
 if __name__ == "__main__":
     asyncio.run(main()) 
