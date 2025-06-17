@@ -1,10 +1,6 @@
-import asyncio
 import logging
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 import os
-from threading import Thread
 from flask import Flask, request, jsonify
 from handlers import generate_final_message
 from utils import get_stock_info
@@ -16,10 +12,6 @@ load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
-
-# Initialize bot and dispatcher
-bot = Bot(token=os.getenv("BOT_TOKEN"))
-dp = Dispatcher()
 
 # Flask app for ManyChat
 app = Flask(__name__)
@@ -48,18 +40,6 @@ def calculate():
     )
     return jsonify({"text": text})
 
-async def start_bot():
-    from handlers import register_handlers
-    register_handlers(dp)
-    await dp.start_polling(bot)
-
-def run_flask():
-    port = int(os.environ.get("PORT", 10000))
-    serve(app, host="0.0.0.0", port=port)
-
 if __name__ == "__main__":
-    # Запускаем Flask в отдельном потоке
-    flask_thread = Thread(target=run_flask)
-    flask_thread.start()
-    # Запускаем Telegram-бота в основном потоке
-    asyncio.run(start_bot()) 
+    port = int(os.environ.get("PORT", 10000))
+    serve(app, host="0.0.0.0", port=port) 
