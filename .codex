@@ -1,0 +1,21 @@
+import os
+import openai
+
+FILES = ["main.py"]  # добавь сюда нужные файлы
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+for file in FILES:
+    with open(file, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "Ты код-ревьюер. Найди ошибки, улучшения, плохие практики."},
+            {"role": "user", "content": f"Проанализируй этот код:\n\n{content}"}
+        ]
+    )
+
+    print(f"\n=== Ревью для {file} ===\n")
+    print(response.choices[0].message["content"])
