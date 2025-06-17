@@ -9,6 +9,7 @@ from flask import Flask, request, jsonify
 from handlers import generate_final_message
 from utils import get_stock_info
 from calculator import calculate_investment
+from waitress import serve
 
 # Load environment variables
 load_dotenv()
@@ -54,7 +55,7 @@ async def start_bot():
 
 def run_flask():
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
+    serve(app, host="0.0.0.0", port=port)
 
 if __name__ == "__main__":
     # Запускаем Flask в отдельном потоке
