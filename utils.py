@@ -137,3 +137,41 @@ async def validate_with_ai(user_input: str, stage: str) -> dict:
         return json.loads(json_str)
     except Exception as e:
         return {'is_valid': True, 'reason': '', 'suggestion': ''}  # fallback: пропускаем 
+
+def words_to_number(text: str) -> float:
+    """
+    Пробует распознать число, написанное словами (русский и английский, простые случаи).
+    Возвращает float или None.
+    """
+    # Примитивная реализация для самых частых случаев
+    # Можно расширить по необходимости
+    num_words = {
+        # Русский
+        "ноль": 0, "один": 1, "два": 2, "три": 3, "четыре": 4, "пять": 5, "шесть": 6, "семь": 7, "восемь": 8, "девять": 9,
+        "десять": 10, "двадцать": 20, "тридцать": 30, "сорок": 40, "пятьдесят": 50, "шестьдесят": 60, "семьдесят": 70, "восемьдесят": 80, "девяносто": 90,
+        "сто": 100, "двести": 200, "триста": 300, "четыреста": 400, "пятьсот": 500, "шестьсот": 600, "семьсот": 700, "восемьсот": 800, "девятьсот": 900,
+        "тысяча": 1000, "тысячи": 1000, "тысяч": 1000,
+        # Английский
+        "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+        "ten": 10, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
+        "hundred": 100, "thousand": 1000
+    }
+    words = text.lower().replace('-', ' ').split()
+    total = 0
+    current = 0
+    for word in words:
+        if word in num_words:
+            scale = num_words[word]
+            if scale == 1000:
+                if current == 0:
+                    current = 1
+                total += current * 1000
+                current = 0
+            elif scale == 100:
+                if current == 0:
+                    current = 1
+                current *= 100
+            else:
+                current += scale
+    total += current
+    return float(total) if total > 0 else None 
