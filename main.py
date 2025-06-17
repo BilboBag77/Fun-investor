@@ -1,26 +1,34 @@
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
+from handlers import router
+from config import BOT_TOKEN
+
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('bot.log'),
+        logging.StreamHandler()
+    ]
+)
+
+# Загрузка переменных окружения
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-
-# Initialize bot and dispatcher
-bot = Bot(token=os.getenv("BOT_TOKEN"))
-dp = Dispatcher()
-
 async def main():
-    # Register handlers
-    from handlers import register_handlers
-    register_handlers(dp)
+    # Инициализация бота и диспетчера
+    bot = Bot(token=BOT_TOKEN)
+    dp = Dispatcher()
     
-    # Start polling
+    # Регистрация роутера
+    dp.include_router(router)
+    
+    # Запуск бота
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
