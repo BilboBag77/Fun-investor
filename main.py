@@ -235,6 +235,30 @@ def webhook():
         logging.error(f"Error processing webhook: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    """Handle direct calculation requests"""
+    try:
+        data = request.get_json()
+        
+        user_id = data.get('user_id')
+        message = data.get('message')
+        
+        if not user_id or not message:
+            return jsonify({"error": "Missing user_id or message"}), 400
+            
+        response_text = process_user_input(user_id, message)
+        
+        response = {
+            "text": response_text
+        }
+        
+        return jsonify(response)
+        
+    except Exception as e:
+        logging.error(f"Error in /calculate: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
