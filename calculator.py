@@ -34,7 +34,7 @@ def calculate_investment(start_year: int, daily_spend: float, symbol: str, curre
             monthly_returns.append((price / hist['Close'].iloc[0]) - 1)
 
         # 4. Текущая цена и расчеты
-        current_price = hist['Close'][-1]
+        current_price = hist['Close'].iloc[-1]
         total_value = total_units * current_price
         
         # Расчет дополнительных метрик
@@ -73,8 +73,8 @@ def calculate_investment(start_year: int, daily_spend: float, symbol: str, curre
             if hist.empty or len(hist['Close']) < 2:
                 raise ValueError("Недостаточно данных для расчета")
 
-            price_start = hist['Close'][0]
-            price_end = hist['Close'][-1]
+            price_start = hist['Close'].iloc[0]
+            price_end = hist['Close'].iloc[-1]
             cagr = (price_end / price_start) ** (1 / years) - 1
             
             # Считаем итоговую сумму с реальной средней доходностью
